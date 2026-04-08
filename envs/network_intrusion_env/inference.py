@@ -8,12 +8,13 @@ import os
 import httpx
 from openai import OpenAI
 
-HF_TOKEN = os.environ.get("HF_TOKEN", "")
-ENV_URL = os.environ.get("ENV_URL", "http://localhost:8000")
+API_BASE_URL = os.environ["API_BASE_URL"]
+API_KEY = os.environ["API_KEY"]
+MODEL_NAME = os.environ["MODEL_NAME"]
 
 openai_client = OpenAI(
-    base_url="https://router.huggingface.co/v1",
-    api_key=HF_TOKEN,
+    base_url=API_BASE_URL,
+    api_key=API_KEY,
 )
 
 VALID_THREATS = ["ddos", "port_scan", "brute_force", "normal"]
@@ -22,7 +23,7 @@ VALID_RESPONSES = ["block_ip", "rate_limit", "alert_only", "ignore"]
 
 def call_llm(prompt: str) -> str:
     response = openai_client.chat.completions.create(
-        model="Qwen/Qwen2.5-72B-Instruct",
+        model=MODEL_NAME,
         messages=[{"role": "user", "content": prompt}],
         max_tokens=200,
         temperature=0.1
